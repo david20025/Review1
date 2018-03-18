@@ -4,6 +4,7 @@ import sys
 import random
 import os
 import pickle
+import math
 
 
 def new_parser():  # Создаем консольную оболочку
@@ -14,7 +15,7 @@ def new_parser():  # Создаем консольную оболочку
         со словарем и длину выводимой последовательности.''',
         epilog='''(с) 2018. Created by Roslyakov Misha'''
     )
-    pars.add_argument('--seed', nargs='?', default='*',
+    pars.add_argument('--seed', nargs='?',
                       help='Задает начальное слово. Если не указано, '
                            'выбираем слово случайно из всех слов '
                            '(не учитывая частоты).')
@@ -42,12 +43,19 @@ def generate_random_start(model):  # создаем рандомное нача�
 
 def generate_random_sentence(length, markov_model):  # создаем предложение заданной длины
     current_word = generate_random_start(markov_model)
+    print(current_word)
     sentence = [current_word]
     for i in range(0, length):
+        while current_word == 'ENDS':
+            current_word = generate_random_start(markov_model)
         current_dictograms = markov_model[current_word]
         random_weighted_word = current_dictograms.return_weighted_random_word()
         current_word = random_weighted_word
-        sentence.append(current_word)
+        print(sentence)
+        if current_word == 'ENDS':
+            sentence.append('.')
+        else:
+            sentence.append(current_word)
     sentence[0] = sentence[0].capitalize()
     return ' '.join(sentence) + '.'
     return sentence
@@ -59,6 +67,7 @@ model_file = commands.model
 with open(model_file, 'rb') as file:
     models = pickle.load(file)
 len_s = commands.length
+print(models.keys())
 phrase = generate_random_sentence(int(len_s), models)
 if not commands.output:
     print('Our text:')

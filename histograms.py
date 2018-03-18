@@ -1,6 +1,7 @@
 import random
 
 
+
 class Dictogram(dict):
     def __init__(self, iterable=None):
         # Инициализируем наше распределение как новый объект класса,
@@ -43,6 +44,6 @@ class Dictogram(dict):
         for i in range(0, self.types):
             index += self[list_of_keys[i]]
             # вывести индекс
-            if (index > random_int):
+            if index > random_int:
                 # вывести list_of_keys[i]
                 return list_of_keys[i]
