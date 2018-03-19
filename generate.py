@@ -15,7 +15,7 @@ def new_parser():  # Создаем консольную оболочку
         со словарем и длину выводимой последовательности.''',
         epilog='''(с) 2018. Created by Roslyakov Misha'''
     )
-    pars.add_argument('--seed', nargs='?',
+    pars.add_argument('--seed', nargs='?', default='END',
                       help='Задает начальное слово. Если не указано, '
                            'выбираем слово случайно из всех слов '
                            '(не учитывая частоты).')
@@ -33,19 +33,26 @@ def new_parser():  # Создаем консольную оболочку
 
 def generate_random_start(model):  # создаем рандомное начало
     if 'END' in model:
-        seed_word = 'END'
-        while seed_word == 'END':
-            seed_word = model['END'].return_weighted_random_word()
-        return seed_word
-    print(list(model.keys()))
+        seed = 'END'
+        while seed == 'END':
+            seed = model['END'].return_weighted_random_word()
+        return seed
     return random.choice(list(model.keys()))
 
 
 def generate_random_sentence(length, markov_model):  # создаем предложение заданной длины
-    current_word = generate_random_start(markov_model)
+    if seed_w != 'END':
+        if seed_w not in markov_model:
+            print("Слово не найдено, сгенерируется рандомное слово")
+            current_word = generate_random_start(markov_model)
+        else:
+            current_word = seed_w
+    else:
+        current_word = generate_random_start(markov_model)
     print(current_word)
     sentence = [current_word]
-    for i in range(0, length):
+    i = 0
+    while i != length:
         while current_word == 'ENDS':
             current_word = generate_random_start(markov_model)
         current_dictograms = markov_model[current_word]
@@ -53,9 +60,10 @@ def generate_random_sentence(length, markov_model):  # создаем предл
         current_word = random_weighted_word
         print(sentence)
         if current_word == 'ENDS':
-            sentence.append('.')
+            i -= 1
         else:
             sentence.append(current_word)
+        i += 1
     sentence[0] = sentence[0].capitalize()
     return ' '.join(sentence) + '.'
     return sentence
@@ -64,6 +72,7 @@ def generate_random_sentence(length, markov_model):  # создаем предл
 parser = new_parser()
 commands = parser.parse_args(sys.argv[1:])
 model_file = commands.model
+seed_w = commands.seed
 with open(model_file, 'rb') as file:
     models = pickle.load(file)
 len_s = commands.length

@@ -32,12 +32,17 @@ def new_parser1():  # Создание консольной оболочки
                       help='Путь к файлу, в который сохраняется модель.'
                            'Формат файла *****.txt'
                            'хранить в папке с train.py и generate.py.')
+    pars.add_argument('--lc', nargs='?',
+                      help='Приводит текст к нижниму регистру')
     return pars
 
 
 def gen_tokens(line_w):  # делим на слова
     for token in r_alphabet.findall(line_w):
-        yield token
+        if lowercase is not None:
+            yield token.lower()
+        else:
+            yield token
 
 
 def make_markov_model(data):
@@ -55,14 +60,13 @@ parser1 = new_parser1()
 commands = parser1.parse_args(sys.argv[1:])
 way_to_file = commands.input1
 name_file = commands.input
+lowercase = commands.lc
 if name_file is not None:
     with open(name_file, 'r', encoding='UTF-8') as file:
         for line in file:
             tokens = ['END']
             tokens += list(gen_tokens(line)) + ['ENDS']
-            print(len(tokens))
             models = make_markov_model(tokens)
-            print(models)
         file.close()
 else:
     if way_to_file is not None:  # ищем путь к текстам
