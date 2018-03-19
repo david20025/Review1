@@ -32,14 +32,14 @@ def new_parser1():  # Создание консольной оболочки
                       help='Путь к файлу, в который сохраняется модель.'
                            'Формат файла *****.txt'
                            'хранить в папке с train.py и generate.py.')
-    pars.add_argument('--lc', nargs='?',
+    pars.add_argument('--lc', nargs='?', default=True,
                       help='Приводит текст к нижниму регистру')
     return pars
 
 
 def gen_tokens(line_w):  # делим на слова
     for token in r_alphabet.findall(line_w):
-        if lowercase is not None:
+        if lowercase is not True:
             yield token.lower()
         else:
             yield token
@@ -89,7 +89,8 @@ else:
                 ls = input().lower()
             except EOFError:
                 break
-            tokens = gen_tokens(ls)
+            tokens = ['END']
+            tokens += list(gen_tokens(ls)) + ['ENDS']
             models = make_markov_model(tokens)
 with open(commands.model, 'wb') as f:
     pickle.dump(models, f)
