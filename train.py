@@ -5,7 +5,7 @@ import pickle
 import os
 import sys
 
-r_alphabet = re.compile(u'[а-яa-zA-ZА-Я0-9-]+|[.,:;?!]+')
+r_alphabet = re.compile(u'[а-яa-zA-ZА-Я0-9-.,:;?!]+')
 
 
 def new_parser1():  # Создание консольной оболочки
