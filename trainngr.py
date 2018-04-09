@@ -66,7 +66,7 @@ n = commands.n
 if name_file is not None:
     with open(name_file, 'r', encoding='UTF-8') as file:
         for line in file:
-            tokens = ['**END**']
+            tokens = []
             tokens += list(gen_tokens(line)) + ['**ENDS**']
             models = make_markov_model(int(n), tokens)
         file.close()
@@ -78,11 +78,9 @@ else:
             path = os.path.join(way_to_file, bad_file)
             with open(path, 'r', encoding='UTF-8') as file:
                 for line in file:
-                    tokens = ['**END**']
+                    tokens = []
                     tokens += list(gen_tokens(line)) + ['**ENDS**']
-                    print(len(tokens))
                     models = make_markov_model(int(n), tokens)
-                    print(models)
                 file.close()
     else:
         ls = ' '
@@ -91,7 +89,7 @@ else:
                 ls = input().lower()
             except EOFError:
                 break
-            tokens = ['**END**']
+            tokens = []
             tokens += list(gen_tokens(ls)) + ['**ENDS**']
             models = make_markov_model(n, tokens)
 with open(commands.model, 'wb') as f:

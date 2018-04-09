@@ -55,36 +55,26 @@ def generate_random_sentence(length, markov_model):  # создаем предл
             break
     if searched == 0:
         current_word = generate_random_start(markov_model)
-    print(current_word)
     sentence = []
     i = 0
     for l in range(n):
-        if current_word[l] != '**END**' and current_word[l] != '**ENDS**':
-            print(current_word[l])
+        if current_word[l] != '**ENDS**':
             sentence.append(current_word[l])
             i += 1
         if i == length:
             sentence[0] = sentence[0].capitalize()
             return ' '.join(sentence) + '.'
             return sentence
-    print(sentence)
-    print('sen')
     current_word = markov_model[current_word].return_weighted_random_word()
     while i < length:
         while '**ENDS**' in current_word:
             current_word = generate_random_start(markov_model)
-        print(current_word)
-        print('1')
-        print(current_word)
-        print('2')
         for j in markov_model.keys():
-            print(j[0])
             if current_word == j[0]:
                 tupt = tuple(j)
                 current_dictograms = markov_model[tupt]
                 random_weighted_word = current_dictograms.return_weighted_random_word()
                 current_word = random_weighted_word
-                print(tupt)
                 if current_word == '**ENDS**':
                     i -= 1
                 else:
@@ -94,7 +84,6 @@ def generate_random_sentence(length, markov_model):  # создаем предл
                         if i == length:
                             break
                 break
-        print(sentence)
     sentence[0] = sentence[0].capitalize()
     return ' '.join(sentence) + '.'
     return sentence
@@ -108,7 +97,6 @@ n = int(commands.n)
 with open(model_file, 'rb') as file:
     models = pickle.load(file)
 len_s = commands.length
-print(models.keys())
 phrase = generate_random_sentence(int(len_s), models)
 if not commands.output:
     print('Our text:')
