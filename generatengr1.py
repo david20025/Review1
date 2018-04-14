@@ -66,7 +66,6 @@ def generate_random_sentence(length, markov_model):  # создаем предл
             return ' '.join(sentence) + '.'
             return sentence
     current_word = markov_model[current_word].return_weighted_random_word()
-    print(current_word)
     while i < length:
         while '**ENDS**'==current_word:
             current_word = generate_random_start(markov_model)
